@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -25,17 +26,25 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'title' => 'required|min:3|max:100|string',
             'body' => ['required', 'min:10'],
-            'status' => ['required', 'in:active,inactive']
+            'status' => ['required', 'in:active,inactive'],
+            'image' => ['image', 'mimes:png,jpg,jpeg']
         ]);
 
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $path = $image->store('posts_images');
+        }
 
         Post::create([
             'title' => $request->title,
             'body' => $request->body,
-            'status' => $request->status
+            'status' => $request->status,
+            'image' => $path ?? null
         ]);
 
         return redirect('/posts')->with('success', 'Post created successfully');
@@ -58,25 +67,38 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|min:3|max:100|string',
             'body' => ['required', 'min:10'],
-            'status' => ['required', 'in:active,inactive']
+            'status' => ['required', 'in:active,inactive'],
+            'image' => ['nullable' , 'mimes:png,jpg,jpeg']
         ]);
-
         $post = Post::findOrFail($id);
+        $old_image = $post->image;
 
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $new_image = $image->store('posts_images');
+        }
         $post->update([
             'title' => $request->title,
             'body' => $request->body,
-            'status' => $request->status
+            'status' => $request->status,
+            'image' => $new_image ?? $old_image
         ]);
 
+        // delete old image if the post has new image
+        if($old_image && $request->hasFile('image')){
+            Storage::delete($old_image);
+        }
         return redirect('/posts')->with('success', 'Post updated successfully');
     }
 
     public function destroy($id)
     {
-        // Post::find($id);
         $post = Post::findOrFail($id);
         $post->delete();
+
+        if($post->image){
+            Storage::delete($post->image);
+        }
 
         return redirect('/posts')->with('success', 'Post deleted successfully');
     }

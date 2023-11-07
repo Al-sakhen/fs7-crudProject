@@ -23,7 +23,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ url('posts/update' , $post->id) }}" method="POST">
+        <form action="{{ route('posts.update' ,$post->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="mb-3">
@@ -38,7 +38,11 @@
                     <textarea class="form-control" name="body" id="floatingTextarea">{{ $post->body }}</textarea>
                 </div>
             </div>
-
+            <div class="mb-3">
+                <label for="image" class="form-label">Image</label>
+                <input type="file" name="image" class="form-control" id="image" aria-describedby="emailHelp">
+                <img width="100" height="100" src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}">
+            </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">status</label>
                 <select class="form-select" name="status" aria-label="Default select example">

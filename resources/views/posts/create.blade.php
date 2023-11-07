@@ -23,7 +23,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ url('posts/store') }}" method="POST">
+        <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Title</label>
@@ -38,6 +38,10 @@
                 </div>
             </div>
 
+            <div class="mb-3">
+                <label for="image" class="form-label">Image</label>
+                <input type="file" name="image" class="form-control" id="image" aria-describedby="emailHelp">
+            </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">status</label>
                 <select class="form-select" name="status" aria-label="Default select example">

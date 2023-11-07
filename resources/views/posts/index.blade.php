@@ -29,6 +29,9 @@
                         <th scope="col">title</th>
                         <th scope="col">body</th>
                         <th scope="col">status</th>
+                        <th>
+                            image
+                        </th>
                         <th scope="col">created at</th>
                         <th>actions</th>
                     </tr>
@@ -41,18 +44,22 @@
                             <td>{{ $post->body }}</td>
                             <td>{{ $post->status }}</td>
                             <td>
+                                <img width="100" height="100" src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}">
+                            </td>
+                            <td>
                                 {{ $post->created_at ?? '-' }}
                                 {{-- // null colascing --}}
                             </td>
                             <td class="d-flex gap-2">
-                                <form action="{{ url('posts/delete', $post->id) }}" method="POST">
+                                <form action="{{ route('posts.destroy' , $post->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-danger">delete</button>
                                 </form>
 
-                                <a href="{{ url('posts/edit' , $post->id) }}" class="btn btn-sm btn-info">Edit</a>
-                                <a href="{{ url('posts/toggle' , $post->id) }}" class="btn btn-sm btn-success">toggle status</a>
+                                <a href="{{ route('posts.edit' , $post->id) }}" class="btn btn-sm btn-info">Edit</a>
+                                <a href="{{ route('posts.toggleStatus' , $post->id) }}" class="btn btn-sm btn-success">toggle
+                                    status</a>
                             </td>
                         </tr>
 
