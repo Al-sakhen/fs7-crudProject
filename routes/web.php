@@ -18,19 +18,21 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
     // view() => helper function to return a view that located in "resources/views"
-});
+})->name('home');
 
 // =============== before resource route ===============
-// Route::get('posts', [PostController::class, 'index'])->name('posts.index');
-// Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
-// Route::post('posts/store', [PostController::class, 'store'])->name('posts.store');
-// Route::delete('posts/delete/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
-// Route::get('posts/edit/{id}', [PostController::class, 'edit'])->name('posts.edit');
-// Route::put('posts/update/{id}', [PostController::class, 'update'])->name('posts.update');
+Route::controller(PostController::class)->prefix('posts')->name('posts.')->middleware('testMiddleware')->group(function () {
+    Route::get('/', 'index')->name('index'); 
+    Route::get('/create',  'create')->name('create'); 
+    Route::post('/store',  'store')->name('store');
+    Route::delete('/delete/{id}',  'destroy')->name('destroy');
+    Route::get('/edit/{id}',  'edit')->name('edit');
+    Route::put('/update/{id}',  'update')->name('update');
+});
 
 // =============== after resource route ===============
-Route::resource('posts', PostController::class);
+// Route::resource('posts', PostController::class)->middleware('testMiddleware');
 Route::get('posts/toggle/{id}', [PostController::class, 'toggleStatus'])->name('posts.toggleStatus');
 
 
-Route::resource('test' , TestController::class); // 7 named routes
+Route::resource('test', TestController::class); // 7 named routes

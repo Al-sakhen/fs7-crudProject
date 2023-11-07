@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::paginate();
 
         return view('posts.index', compact('posts'));
     }
@@ -24,16 +25,8 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-
-        $request->validate([
-            'title' => 'required|min:3|max:100|string',
-            'body' => ['required', 'min:10'],
-            'status' => ['required', 'in:active,inactive'],
-            'image' => ['image', 'mimes:png,jpg,jpeg']
-        ]);
-
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
