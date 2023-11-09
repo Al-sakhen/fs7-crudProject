@@ -24,6 +24,7 @@ class PostFactory extends Factory
             'body' => fake()->sentence(10),
             'image' => fake()->imageUrl(),
             'status' => fake()->randomElement(['active', 'inactive']),
+            'user_id' => fake()->numberBetween(1, 3),
         ];
     }
 }

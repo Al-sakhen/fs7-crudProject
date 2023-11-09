@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Phone;
+use App\Models\Post;
+use App\Models\Store;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -11,8 +15,39 @@ class TestController extends Controller
      */
     public function index()
     {
-        //
+        // attach () => create
+        //  sync ()  => update
+        // detach () => delete
+
+        $store = Store::find(2);
+        $regionIds = [22,23,24 ];
+
+        // $store->delete();
+        $store->regions()->attach($regionIds   );
+
+        return $store->regions;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Show the form for creating a new resource.
